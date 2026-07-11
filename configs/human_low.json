@@ -1,0 +1,16 @@
+{
+  "food_per_person_per_hour": 1.0,
+  "med_per_patient_per_hour": 0.2,
+  "human_efficiency": "low",
+  "hubs": [
+    {"id": "B1", "x": 0, "y": 0, "init_normal": 1000, "init_medium": 100, "init_severe": 20, "food": 2000, "med": 500, "vehicle_level": 1, "capacity_persons": 4000, "food_storage_max": 4000, "med_storage_max": 1000, "base_travel_time_to_cities": {"S1":4, "S2":6, "S3":8}},
+    {"id": "B2", "x": 10, "y": 0, "init_normal": 1200, "init_medium": 150, "init_severe": 30, "food": 2000, "med": 500, "vehicle_level": 1, "capacity_persons": 4000, "food_storage_max": 4000, "med_storage_max": 1000, "base_travel_time_to_cities": {"S1":6, "S2":4, "S3":9}},
+    {"id": "B3", "x": 5, "y": 8, "init_normal": 900, "init_medium": 80, "init_severe": 10, "food": 1000, "med": 200, "vehicle_level": 1, "capacity_persons": 3000, "food_storage_max": 2000, "med_storage_max": 500, "base_travel_time_to_cities": {"S1":8, "S2":9, "S3":4}}
+  ],
+  "cities": [
+    {"id": "S1", "severe_beds_max": 200, "medium_beds_max": 100, "normal_capacity_max": 500},
+    {"id": "S2", "severe_beds_max": 100, "medium_beds_max": 200, "normal_capacity_max": 800},
+    {"id": "S3", "severe_beds_max": 20, "medium_beds_max": 50, "normal_capacity_max": 2000}
+  ],
+  "points": []
+}

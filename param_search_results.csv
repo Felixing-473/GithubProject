@@ -1,0 +1,4 @@
+config,total_reward
+configs/default.json,6403.400000000002
+configs/human_low.json,7603.400000000004
+configs/human_high.json,7203.400000000004
