@@ -1,5 +1,7 @@
-import torch
+import argparse
+import csv
 import numpy as np
+import torch
 from env.flood_env import FloodEvacuationEnv
 from agents.ppo import ActorCritic
 
@@ -22,27 +24,62 @@ def act(model, obs):
     return actions
 
 
-def run_eval(model_path=None, episodes=10):
-    env = FloodEvacuationEnv(config_path="configs/default.json", seed=42)
-    if model_path:
-        model = load_policy(model_path, env)
-    else:
-        model = None
+def run_episode(env, model=None, seed=42):
+    obs = env.reset(pre_disaster_action=0)
+    done = False
+    total_reward = 0.0
+    step_count = 0
+    while not done:
+        if model is None:
+            action = env.action_space["step_action"].sample()
+        else:
+            action = act(model, obs)
+        obs, reward, done, info = env.step({"step_action": action, "pre_action": 0})
+        total_reward += reward
+        step_count += 1
+
+    summary = {
+        "steps": step_count,
+        "total_reward": float(total_reward),
+        "hub_waiting": {k: h.total_people for k, h in env.hubs.items()},
+        "city_population": {k: c.current_normal + c.current_medium + c.current_severe for k, c in env.cities.items()},
+        "flood_target": env.flood_target,
+    }
+    return summary
+
+
+def run_eval(model_path=None, episodes=1, config_path="configs/default.json", output_csv=None):
+    env = FloodEvacuationEnv(config_path=config_path, seed=42)
+    model = load_policy(model_path, env) if model_path else None
     results = []
     for ep in range(episodes):
-        obs = env.reset()
-        done = False
-        total_reward = 0.0
-        while not done:
-            if model is None:
-                action = env.action_space["step_action"].sample()
-            else:
-                action = act(model, obs)
-            obs, r, done, info = env.step({"step_action": action, "pre_action": 0})
-            total_reward += r
-        results.append(total_reward)
-    print("Eval results avg:", np.mean(results), "std:", np.std(results))
+        summary = run_episode(env, model=model)
+        results.append(summary)
+
+    if output_csv:
+        with open(output_csv, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=["steps", "total_reward", "hub_waiting", "city_population", "flood_target"])
+            writer.writeheader()
+            for row in results:
+                writer.writerow(row)
+
+    print("Simulation results:")
+    for idx, row in enumerate(results, 1):
+        print(f"Episode {idx}: steps={row['steps']}, total_reward={row['total_reward']:.2f}")
+        print(f"  hub_waiting={row['hub_waiting']}")
+        print(f"  city_population={row['city_population']}")
+        print(f"  flood_target={row['flood_target']}")
+
+    if len(results) > 1:
+        rewards = [r["total_reward"] for r in results]
+        print(f"Average reward over {len(results)} episodes: {np.mean(rewards):.2f}")
 
 
 if __name__ == "__main__":
-    run_eval()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model-path", default=None)
+    parser.add_argument("--episodes", type=int, default=1)
+    parser.add_argument("--config", default="configs/default.json")
+    parser.add_argument("--output-csv", default=None)
+    args = parser.parse_args()
+    run_eval(model_path=args.model_path, episodes=args.episodes, config_path=args.config, output_csv=args.output_csv)
