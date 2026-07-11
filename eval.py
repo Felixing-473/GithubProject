@@ -165,11 +165,12 @@ def run_eval(model_path=None, episodes=1, config_path=None, config=None, output_
         results.append(summary)
 
     if output_csv:
+        summary_fields = ["steps", "total_reward", "hub_waiting", "city_population", "flood_target"]
         with open(output_csv, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=["steps", "total_reward", "hub_waiting", "city_population", "flood_target"])
+            writer = csv.DictWriter(f, fieldnames=summary_fields)
             writer.writeheader()
             for row in results:
-                writer.writerow(row)
+                writer.writerow({field: row[field] for field in summary_fields})
 
     print("Simulation results:")
     for idx, row in enumerate(results, 1):

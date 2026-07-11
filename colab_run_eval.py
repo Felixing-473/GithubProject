@@ -11,6 +11,7 @@ def main():
     parser.add_argument("--episodes", type=int, default=1)
     parser.add_argument("--config", default="configs/default.json")
     parser.add_argument("--output-csv", default=None)
+    parser.add_argument("--decision-log", default=None)
     args = parser.parse_args()
 
     repo_root = Path(__file__).resolve().parent
@@ -28,6 +29,7 @@ def main():
             episodes=args.episodes,
             config_path=args.config,
             output_csv=args.output_csv,
+            decision_log_path=args.decision_log,
         )
     elif hasattr(eval_mod, "run_eval"):
         eval_mod.run_eval(
@@ -35,6 +37,7 @@ def main():
             episodes=args.episodes,
             config_path=args.config,
             output_csv=args.output_csv,
+            decision_log_path=args.decision_log,
         )
     else:
         raise AttributeError("Neither run_from_colab nor run_eval is available in eval.py")
