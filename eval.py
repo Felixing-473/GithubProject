@@ -84,3 +84,7 @@ if __name__ == "__main__":
     parser.add_argument("--output-csv", default=None)
     args = parser.parse_args()
     run_eval(model_path=args.model_path, episodes=args.episodes, config_path=args.config, output_csv=args.output_csv)
+
+
+def run_from_colab(model_path, episodes=1, config_path="configs/default.json", output_csv=None):
+    run_eval(model_path=model_path, episodes=episodes, config_path=config_path, output_csv=output_csv)
