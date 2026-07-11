@@ -48,8 +48,9 @@ def run_episode(env, model=None, seed=42):
     return summary
 
 
-def run_eval(model_path=None, episodes=1, config_path="configs/default.json", output_csv=None):
-    env = FloodEvacuationEnv(config_path=config_path, seed=42)
+def run_eval(model_path=None, episodes=1, config_path=None, config=None, output_csv=None):
+    config_file = config_path or config or "configs/default.json"
+    env = FloodEvacuationEnv(config_path=config_file, seed=42)
     model = load_policy(model_path, env) if model_path else None
     results = []
     for ep in range(episodes):
