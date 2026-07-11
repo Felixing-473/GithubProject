@@ -135,6 +135,7 @@ class FloodEvacuationEnv(gym.Env):
         # runtime state
         self.step_count = 0
         self.seed_val = seed
+        self.last_pre_disaster_action = None
         # tracking transfers for reward calculation
         self.last_transferred_severe = 0
         self.last_transferred_medium = 0
@@ -196,6 +197,7 @@ class FloodEvacuationEnv(gym.Env):
         self.outgoing_transports = []
         self.step_count = 0
         self.flood_target = random.choice(list(self.hubs.keys()))
+        self.last_pre_disaster_action = pre_disaster_action
 
         # reset transfer trackers
         self.last_transferred_severe = 0
