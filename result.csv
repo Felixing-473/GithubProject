@@ -1,0 +1,2 @@
+steps,total_reward,hub_waiting,city_population,flood_target
+28,6603.400000000002,"{'B1': 0, 'B2': 0, 'B3': 0}","{'S1': 120, 'S2': 1040, 'S3': 900}",B1
